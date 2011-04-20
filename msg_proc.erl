@@ -3,7 +3,7 @@
 
 
 start(Timeout) ->
-  spawn(fun() -> loop(Timeout) end).
+  loop(Timeout).
 
 loop(Timeout) ->
   receive
