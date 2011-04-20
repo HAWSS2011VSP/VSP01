@@ -8,15 +8,17 @@ start(Timeout) ->
 loop(Timeout) ->
   receive
     {waitForMsg, ID} ->
-      waitFor(ID, Timeout)
+      waitFor(ID, Timeout),
+      loop(Timeout)
   end.
 
 waitFor(ID, Timeout) ->
+  io:format("Waiting for Msg ~s~n", [io_lib:write(ID)]),
   receive
-    {PID, putMessage, ID, Msg} ->
-      storage ! {PID, putMessage, ID, Msg}
+    {PID, putMsg, ID, Msg} ->
+      storage ! {PID, putMsg, ID, Msg}
   after Timeout ->
-    storage ! {nil, putMessage, ID, lists:concat([">> Msg with ID ", ID, " is missing ", currentDateTime(), " <<"])}
+    storage ! {nil, putMsg, ID, lists:concat([">> Msg with ID ", ID, " is missing ", currentDateTime(), " <<"])}
   end.
 
 currentDateTime() ->
@@ -24,7 +26,7 @@ currentDateTime() ->
   {Hour, Minute, Second} = erlang:time(),
   lists:concat([mkString(".", [Day, Month, Year],[]), " ", mkString(":", [Hour, Minute, Second], [])]).
 
-mkString(Seperator, [], Result) ->
+mkString(_, [], Result) ->
   Result;
 mkString(Seperator, [Item|[]], Result) ->
   mkString(Seperator, [], lists:concat([Result, Item]));
