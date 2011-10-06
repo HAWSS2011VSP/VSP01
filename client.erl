@@ -1,4 +1,4 @@
-%% Author: André Sch
+%% Author: An Sch
 %% Created: 03.04.2011
 %% Description: TODO: Add description to dummyClient
 -module(client).
