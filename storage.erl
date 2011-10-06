@@ -6,7 +6,7 @@ start(CheckInterval) ->
 
 loop(Clients, Messages, Offset, CheckInterval) ->
   receive
-    {_, putMsg, _, Msg} ->
+    {putMsg, _, Msg} ->
       io:format("Inserting: ~s~n", [Msg]),
       {NewMsgs, NewOffset} = insertMessage(Messages, Msg, Offset),
       loop(deleteIdleClients(Clients, CheckInterval), NewMsgs, NewOffset, CheckInterval);

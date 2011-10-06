@@ -15,8 +15,8 @@ loop(Timeout) ->
 waitFor(ID, Timeout) ->
   io:format("Waiting for Msg ~s~n", [io_lib:write(ID)]),
   receive
-    {PID, putMsg, ID, Msg} ->
-      storage ! {PID, putMsg, ID, Msg}
+    {putMsg, ID, Msg} ->
+      storage ! {putMsg, ID, Msg}
   after Timeout ->
     storage ! {nil, putMsg, ID, lists:concat([">> Msg with ID ", ID, " is missing ", currentDateTime(), " <<"])}
   end.

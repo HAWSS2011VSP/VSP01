@@ -12,15 +12,15 @@ start(Timeout) ->
 
 loop(Timeout, Index) ->
   receive
-    {PID, getMsgId} ->
+    {getmsgid, PID} ->
       PID ! {msgId, Index},
       msg_proc ! {waitForMsg, Index},
       loop(Timeout, Index+1);
-    {PID, getMsg} ->
+    {getmessages, PID} ->
       storage ! {PID, getMsg},
       loop(Timeout, Index);
-    {PID, putMsg, MsgID, Msg} ->
-      msg_proc ! {PID, putMsg, MsgID, Msg},
+    {dropmessage, {Message, Number}} ->
+      msg_proc ! {putMsg, Number, Message},
       loop(Timeout, Index)
   after Timeout ->
     exit(whyYouNoNeedMe)
