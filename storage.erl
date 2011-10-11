@@ -1,35 +1,42 @@
 -module(storage).
--export([start/1]).
+-export([start/3]).
 
-start(CheckInterval) ->
-  loop(dict:new(),[], 0, CheckInterval).
+start(CheckInterval, Timeout, MaxSize) ->
+  loop(dict:new(),[], 0, CheckInterval, Timeout, MaxSize).
 
-loop(Clients, Messages, Offset, CheckInterval) ->
+loop(Clients, Messages, Offset, CheckInterval, Timeout, MaxSize) ->
   receive
     {putMsg, _, Msg} ->
-      io:format("Inserting: ~s~n", [Msg]),
-      {NewMsgs, NewOffset} = insertMessage(Messages, Msg, Offset),
-      loop(deleteIdleClients(Clients, CheckInterval), NewMsgs, NewOffset, CheckInterval);
+      logger ! {debug, lists:concat(["Inserting: ", Msg])},
+      {NewMsgs, NewOffset} = insertMessage(Messages, Msg, Offset, MaxSize),
+      loop(deleteIdleClients(Clients, CheckInterval), NewMsgs, NewOffset, CheckInterval, Timeout, MaxSize);
     {PID, getMsg} ->
       {NewClients, Msg} = getMessage(PID, Clients, Messages, Offset),
       PID ! Msg,
-      loop(deleteIdleClients(NewClients, CheckInterval), Messages, Offset, CheckInterval)
+      loop(deleteIdleClients(NewClients, CheckInterval), Messages, Offset, CheckInterval, Timeout, MaxSize)
   after CheckInterval ->
-    loop(deleteIdleClients(Clients, CheckInterval), Messages, Offset, CheckInterval)
+    loop(deleteIdleClients(Clients, Timeout), Messages, Offset, CheckInterval, Timeout, MaxSize)
   end.
 
-insertMessage(Msgs, Msg, Offset) ->
+insertMessage(Msgs, Msg, Offset, MaxSize) ->
   Size = length(Msgs),
   if
-    Size >= 1000 ->
-      {lists:append(lists:seq(1,Size, Msgs), [Msg]), Offset+1};
+    Size >= MaxSize ->
+      {lists:append(lists:sublist(Msgs,1,Size), [Msg]), Offset+1};
     true ->
       {lists:append(Msgs, [Msg]), Offset}
   end.
 
 deleteIdleClients(Clients, Timeout) ->
-  dict:filter(fun(PID, [{_, LastSeen}]) ->
-      LastSeen >= getUnixTimestamp(now()) - Timeout
+  dict:filter(fun(PID, {_, LastSeen}) ->
+      Delete = LastSeen =< getUnixTimestamp(now()) - Timeout,
+      if
+        Delete == true ->
+          logger ! {debug, lists:concat(["Removing ", pid_to_list(PID), " from list."])},
+          false;
+        true ->
+          true
+        end
     end,
     Clients).
 
@@ -37,11 +44,13 @@ getMessage(PID, Clients, Messages, Offset) ->
   Count = length(Messages),
   case dict:find(PID, Clients) of
     {ok, {Index, _}} when Count > Index ->
-      {dict:update(PID, {Index+1, getUnixTimestamp(now())} ,Clients), {lists:nth(zeroOrGreater(Index - Offset+1), Messages), Index, Count >= Index}};
+      logger ! {debug, lists:concat(["Getting message nr. ", integer_to_list(Index), " for ", pid_to_list(PID)])},
+      {dict:store(PID, {Index+1, getUnixTimestamp(now())} ,Clients), {lists:nth(zeroOrGreater(Index - Offset+1), Messages), Count =< Index}};
     error when Count > 0 ->
-      {dict:append(PID, {1+Offset,getUnixTimestamp(now())}, Clients), {lists:nth(1,Messages), 0, Count >= 1}};
+      logger ! {debug, lists:concat(["Inserting new client: ", pid_to_list(PID)])},
+      {dict:store(PID, {1+Offset,getUnixTimestamp(now())}, Clients), {lists:nth(1,Messages), Count =< 1}};
     _ ->
-      {Clients,{"Already got every Message.", -1, true}}
+      {Clients,{lists:concat(["Already got every Message. Offset: ", integer_to_list(Offset), " Count: ", integer_to_list(Count)]), true}}
   end.
 
 zeroOrGreater(Number) ->

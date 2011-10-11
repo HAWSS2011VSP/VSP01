@@ -1,22 +1,23 @@
 -module(server).
--export([start/1]).
+-export([start/0]).
 
-start(Timeout) ->
-  net_kernel:start([server, shortnames]),
+start() ->
   process_flag(trap_exit, true),
-  erlang:nodes(visible),
-  register(server, self()),
-  register(storage, spawn_link(storage, start, [500])),
+  Config = config:read('server.cfg'),
+  global:register_name(config:get(servername, Config), self()),
+  register(storage, spawn_link(storage, start, [500, config:get(clientlifetime, Config), config:get(dlqlimit, Config)])),
   register(msg_proc, spawn_link(msg_proc, start, [1000])),
-  loop(Timeout, 0).
+  logger:create('NServer.log'),
+  loop(config:get(lifetime, Config) * 1000, 0).
 
 loop(Timeout, Index) ->
   receive
     {getmsgid, PID} ->
-      PID ! {msgId, Index},
+      PID ! Index,
       msg_proc ! {waitForMsg, Index},
       loop(Timeout, Index+1);
     {getmessages, PID} ->
+      logger ! {debug, "Get message called."},
       storage ! {PID, getMsg},
       loop(Timeout, Index);
     {dropmessage, {Message, Number}} ->

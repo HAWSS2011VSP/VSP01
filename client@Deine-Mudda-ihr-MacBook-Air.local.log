@@ -1,0 +1,69 @@
+DEBUG: Getting a message.
+DEBUG: Got message: client@Deine-Mudda-ihr-MacBook-Air.local-1-22-12.10.2011 0:43:37: This is Message Number 0 12.10.2011 0:43:37
+DEBUG: Getting a message.
+DEBUG: Got message: client@Deine-Mudda-ihr-MacBook-Air.local-1-22-12.10.2011 0:43:40: This is Message Number 1 12.10.2011 0:43:40
+DEBUG: Getting a message.
+DEBUG: Got message: client@Deine-Mudda-ihr-MacBook-Air.local-1-22-12.10.2011 0:43:43: This is Message Number 2 12.10.2011 0:43:43
+DEBUG: Getting a message.
+DEBUG: Got message: client@Deine-Mudda-ihr-MacBook-Air.local-1-22-12.10.2011 0:43:46: This is Message Number 3 12.10.2011 0:43:46
+DEBUG: Getting a message.
+DEBUG: Got message: client@Deine-Mudda-ihr-MacBook-Air.local-1-22-12.10.2011 0:43:49: This is Message Number 4 12.10.2011 0:43:49
+DEBUG: Getting a message.
+DEBUG: Got message: Already got every Message. Offset: 0 Count: 5
+DEBUG: Getting a message.
+DEBUG: Got message: client@Deine-Mudda-ihr-MacBook-Air.local-1-22-12.10.2011 0:43:52: This is Message Number 5 12.10.2011 0:43:52
+DEBUG: Getting a message.
+DEBUG: Got message: client@Deine-Mudda-ihr-MacBook-Air.local-1-22-12.10.2011 0:43:55: This is Message Number 6 12.10.2011 0:43:55
+DEBUG: Getting a message.
+DEBUG: Got message: client@Deine-Mudda-ihr-MacBook-Air.local-1-22-12.10.2011 0:43:58: This is Message Number 7 12.10.2011 0:43:58
+DEBUG: Getting a message.
+DEBUG: Got message: client@Deine-Mudda-ihr-MacBook-Air.local-1-22-12.10.2011 0:44:1: This is Message Number 8 12.10.2011 0:44:1
+DEBUG: Getting a message.
+DEBUG: Got message: client@Deine-Mudda-ihr-MacBook-Air.local-1-22-12.10.2011 0:44:4: This is Message Number 9 12.10.2011 0:44:4
+DEBUG: Getting a message.
+DEBUG: Got message: Already got every Message. Offset: 0 Count: 10
+DEBUG: Getting a message.
+DEBUG: Got message: client@Deine-Mudda-ihr-MacBook-Air.local-1-22-12.10.2011 0:44:7: This is Message Number 10 12.10.2011 0:44:7
+DEBUG: Getting a message.
+DEBUG: Got message: client@Deine-Mudda-ihr-MacBook-Air.local-1-22-12.10.2011 0:44:10: This is Message Number 11 12.10.2011 0:44:10
+DEBUG: Getting a message.
+DEBUG: Got message: client@Deine-Mudda-ihr-MacBook-Air.local-1-22-12.10.2011 0:44:13: This is Message Number 12 12.10.2011 0:44:13
+DEBUG: Getting a message.
+DEBUG: Got message: client@Deine-Mudda-ihr-MacBook-Air.local-1-22-12.10.2011 0:44:16: This is Message Number 13 12.10.2011 0:44:16
+DEBUG: Getting a message.
+DEBUG: Got message: client@Deine-Mudda-ihr-MacBook-Air.local-1-22-12.10.2011 0:44:19: This is Message Number 14 12.10.2011 0:44:19
+DEBUG: Getting a message.
+DEBUG: Got message: Already got every Message. Offset: 0 Count: 15
+DEBUG: Getting a message.
+DEBUG: Got message: client@Deine-Mudda-ihr-MacBook-Air.local-1-22-12.10.2011 0:44:22: This is Message Number 15 12.10.2011 0:44:22
+DEBUG: Getting a message.
+DEBUG: Got message: client@Deine-Mudda-ihr-MacBook-Air.local-1-22-12.10.2011 0:44:25: This is Message Number 16 12.10.2011 0:44:25
+DEBUG: Getting a message.
+DEBUG: Got message: client@Deine-Mudda-ihr-MacBook-Air.local-1-22-12.10.2011 0:44:28: This is Message Number 17 12.10.2011 0:44:28
+DEBUG: Getting a message.
+DEBUG: Got message: client@Deine-Mudda-ihr-MacBook-Air.local-1-22-12.10.2011 0:44:31: This is Message Number 18 12.10.2011 0:44:31
+DEBUG: Getting a message.
+DEBUG: Got message: client@Deine-Mudda-ihr-MacBook-Air.local-1-22-12.10.2011 0:44:34: This is Message Number 19 12.10.2011 0:44:34
+DEBUG: Getting a message.
+DEBUG: Got message: Already got every Message. Offset: 0 Count: 20
+DEBUG: Inserting message: client@Deine-Mudda-ihr-MacBook-Air.local-1-22-12.10.2011 0:46:23: This is Message Number 0
+DEBUG: Inserting message: client@Deine-Mudda-ihr-MacBook-Air.local-1-22-12.10.2011 0:46:26: This is Message Number 1
+DEBUG: Inserting message: client@Deine-Mudda-ihr-MacBook-Air.local-1-22-12.10.2011 0:46:29: This is Message Number 2
+DEBUG: Inserting message: client@Deine-Mudda-ihr-MacBook-Air.local-1-22-12.10.2011 0:46:32: This is Message Number 3
+DEBUG: Inserting message: client@Deine-Mudda-ihr-MacBook-Air.local-1-22-12.10.2011 0:46:35: This is Message Number 4
+DEBUG: Getting a message.
+DEBUG: Got message: client@Deine-Mudda-ihr-MacBook-Air.local-1-22-12.10.2011 0:46:23: This is Message Number 0 12.10.2011 0:46:23
+DEBUG: Getting a message.
+DEBUG: Got message: client@Deine-Mudda-ihr-MacBook-Air.local-1-22-12.10.2011 0:46:26: This is Message Number 1 12.10.2011 0:46:26
+DEBUG: Getting a message.
+DEBUG: Got message: client@Deine-Mudda-ihr-MacBook-Air.local-1-22-12.10.2011 0:46:29: This is Message Number 2 12.10.2011 0:46:29
+DEBUG: Getting a message.
+DEBUG: Got message: client@Deine-Mudda-ihr-MacBook-Air.local-1-22-12.10.2011 0:46:32: This is Message Number 3 12.10.2011 0:46:32
+DEBUG: Getting a message.
+DEBUG: Got message: client@Deine-Mudda-ihr-MacBook-Air.local-1-22-12.10.2011 0:46:35: This is Message Number 4 12.10.2011 0:46:35
+DEBUG: Getting a message.
+DEBUG: Got message: Already got every Message. Offset: 0 Count: 5
+DEBUG: Inserting message: client@Deine-Mudda-ihr-MacBook-Air.local-1-22-12.10.2011 0:46:38: This is Message Number 5
+DEBUG: Inserting message: client@Deine-Mudda-ihr-MacBook-Air.local-1-22-12.10.2011 0:46:41: This is Message Number 6
+DEBUG: Inserting message: client@Deine-Mudda-ihr-MacBook-Air.local-1-22-12.10.2011 0:46:44: This is Message Number 7
+DEBUG: Inserting message: client@Deine-Mudda-ihr-MacBook-Air.local-1-22-12.10.2011 0:46:47: This is Message Number 8

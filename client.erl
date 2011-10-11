@@ -1,53 +1,43 @@
-<<<<<<< HEAD
-%% Author: André SchmiDidt
-=======
-%% Author: André Sch
->>>>>>> f954b00d6b33e1d1120d425558cd786a12a9da3e
-%% Created: 03.04.2011
-%% Description: TODO: Add description to dummyClient
 -module(client).
+-export([setup/1]).
 
-%%
-%% Include files
-%%
-
-%%
-%% Exported Functions
-%%
--export([setup/0]).
-
-%%
-%% API Functions
-%%
-
-
-
-%%
-%% Local Functions
-%%
-
-setup() ->
-  net_kernel:start([client, shortnames]),
-  erlang:nodes(visible),
+setup(ServerAddress) ->
   process_flag(trap_exit, true),
-  %ServerID = spawn(mainServer,hauptVerwalter,start,[]),
-  %ServerID ! {self(), anfrage1 },
-  Server = {server,server@localhost},
-  net_kernel:connect_node(server@localhost),
-  Server ! {self(), getMsgId},
+  Config = config:read('client.cfg'),
+  net_adm:ping(ServerAddress),
+  logger:create(lists:concat([node(), ".log"])),
+  timer:sleep(500),
+  Server = global:whereis_name(config:get(servername, Config)),
+  loop(Server, config:get(sendeintervall, Config) * 1000, 0).
+
+loop(Server, Interval, 5) ->
+  Server ! {getmessages, self()},
+  logger ! {debug, "Getting a message."},
   receive
-    {msgId, ID} ->
-      io:fwrite( "ID: ~s~n", [io_lib:write(ID)] ),
-      Server ! {self(), putMsg, ID, "Das ist eine Nachricht"},
-      Server ! {self(), getMsg},
-      receive
-        {Msg, MsgID, All} ->
-          io:format("Got: ~s.~n", [Msg])
-      after 10000 ->
-        exit(why_no_message)
-      end
+    {Msg, false} ->
+      logger ! {debug, lists:concat(["Got message: ", Msg])},
+      loop(Server, Interval, 5);
+    {Msg, true} ->
+      logger ! {debug, lists:concat(["Got message: ", Msg])},
+      loop(Server, Interval, 0);
+    X ->
+      logger ! {debug, "Unknown error."}
+  end;
+loop(Server, Interval, Count) ->
+  ID = getId(Server),
+  Message = createMsg(ID),
+  logger ! {debug, lists:concat(["Inserting message: ", Message])},
+  Server ! {dropmessage, {Message, ID}},
+  timer:sleep(Interval),
+  loop(Server, Interval, Count + 1).
+
+getId(Server) ->
+  Server ! {getmsgid, self()},
+  receive
+    Num ->
+      Num
   end.
 
-% server_node() ->
-%     {ok,HostName} = inet:gethostname(),
-%     list_to_atom("gandalf@localhost" ++ HostName).
+createMsg(ID) ->
+  lists:concat([node(), "-1-22-", utils:now_str(), ": This is Message Number ", integer_to_list(ID)]).
+
