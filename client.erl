@@ -19,7 +19,7 @@ loop(Server, Interval, 5) ->
       loop(Server, Interval, 5);
     {Msg, true} ->
       logger ! {debug, lists:concat(["Got message: ", Msg])},
-      loop(Server, Interval, 0);
+      loop(Server, calculateNewInterval(Interval), 0);
     X ->
       logger ! {debug, "Unknown error."}
   end;
@@ -36,6 +36,20 @@ getId(Server) ->
   receive
     Num ->
       Num
+  end.
+
+calculateNewInterval(Interval) ->
+  Increase = utils:bool_rand(),
+  Value = trunc(max(Interval * 0.5, 1000)),
+  if
+    Increase ->
+      Total = Interval + Value,
+      logger ! {debug, lists:concat(["Setting ", integer_to_list(Total), " as new interval."])},
+      Total;
+    true ->
+      Total = max(Interval - Value, 1000),
+      logger ! {debug, lists:concat(["Setting ", integer_to_list(Total), " as new interval."])},
+      Total
   end.
 
 createMsg(ID) ->
