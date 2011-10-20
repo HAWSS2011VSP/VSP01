@@ -1,0 +1,16 @@
+== Starten des Servers
+
+Um den Server zu starten muss zunächst eine Erlang Node mit Longname und Cookie gestartet werden.
+Den Serverprozess startet man dann mit:
+
+    server:start().
+
+
+== Starten der Clients
+
+Um eine ANzahl an Clients zu starten muss man ebenfalls eine Erlang Node mit Longname und dem gleichen Cookie
+wie dem Server starten. Die Clientprozesse startet man dann mit:
+
+    client:start(ServerName, AnzahlClients).
+
+ServerName ist hier ein Atom und AnzahlClients ein Integer.

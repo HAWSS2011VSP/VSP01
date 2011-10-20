@@ -1,35 +1,46 @@
 -module(client).
--export([setup/1]).
+-export([start/2, setup/2]).
 
-setup(ServerAddress) ->
+setup(ServerAddress, Number) ->
+  random:seed(now()),
   process_flag(trap_exit, true),
   Config = config:read('client.cfg'),
   net_adm:ping(ServerAddress),
-  logger:create(lists:concat([node(), ".log"])),
   timer:sleep(500),
-  Server = global:whereis_name(config:get(servername, Config)),
-  loop(Server, config:get(sendeintervall, Config) * 1000, 0).
+  Server = {config:get(servername, Config), ServerAddress},
+  loop(Server, config:get(sendeintervall, Config) * 1000, 0, Number).
 
-loop(Server, Interval, 5) ->
+start(ServerAddress, Number) ->
+  logger:create(lists:concat([node(), ".log"])),
+  start_n(ServerAddress, Number).
+
+start_n(_ServerAddress, 0) ->
+  ok;
+start_n(ServerAddress, Number) ->
+  spawn(?MODULE, setup, [ServerAddress, Number]),
+  io:format("Spawned client nr ~s~n", [integer_to_list(Number)]),
+  start_n(ServerAddress, Number - 1).
+
+loop(Server, Interval, 5, Number) ->
   Server ! {getmessages, self()},
   logger ! {debug, "Getting a message."},
   receive
     {Msg, false} ->
       logger ! {debug, lists:concat(["Got message: ", Msg])},
-      loop(Server, Interval, 5);
+      loop(Server, Interval, 5, Number);
     {Msg, true} ->
       logger ! {debug, lists:concat(["Got message: ", Msg])},
-      loop(Server, calculateNewInterval(Interval), 0);
-    X ->
+      loop(Server, calculateNewInterval(Interval), 0, Number);
+    _X ->
       logger ! {debug, "Unknown error."}
   end;
-loop(Server, Interval, Count) ->
+loop(Server, Interval, Count, Number) ->
   ID = getId(Server),
-  Message = createMsg(ID),
+  Message = createMsg(ID, Number),
   logger ! {debug, lists:concat(["Inserting message: ", Message])},
   Server ! {dropmessage, {Message, ID}},
   timer:sleep(Interval),
-  loop(Server, Interval, Count + 1).
+  loop(Server, Interval, Count + 1, Number).
 
 getId(Server) ->
   Server ! {getmsgid, self()},
@@ -52,6 +63,9 @@ calculateNewInterval(Interval) ->
       Total
   end.
 
-createMsg(ID) ->
-  lists:concat([node(), "-1-22-", utils:now_str(), ": This is Message Number ", integer_to_list(ID)]).
+createMsg(ID, Number) ->
+  lists:concat(["client", integer_to_list(Number), "@", hostname(), "-1-22-", utils:now_str(), ": This is Message Number ", integer_to_list(ID)]).
 
+hostname() ->
+  Split = re:split(atom_to_list(node()), "@"),
+  binary_to_list(lists:nth(2,Split)).

@@ -45,7 +45,7 @@ getMessage(PID, Clients, Messages, Offset) ->
   case dict:find(PID, Clients) of
     {ok, {Index, _}} when Count > Index - Offset ->
       logger ! {debug, lists:concat(["Getting message nr. ", integer_to_list(Index), " for ", pid_to_list(PID)])},
-      {dict:store(PID, {Index+1, getUnixTimestamp(now())} ,Clients), {lists:nth(zeroOrGreater(Index - Offset+1), Messages), false};
+      {dict:store(PID, {Index+1, getUnixTimestamp(now())} ,Clients), {lists:nth(oneOrGreater(Index - Offset+1), Messages), false}};
     error when Count > 0 ->
       logger ! {debug, lists:concat(["Inserting new client: ", pid_to_list(PID)])},
       {dict:store(PID, {1+Offset,getUnixTimestamp(now())}, Clients), {lists:nth(1,Messages), Count =< 1}};
@@ -53,12 +53,12 @@ getMessage(PID, Clients, Messages, Offset) ->
       {Clients,{lists:concat(["Already got every Message. Offset: ", integer_to_list(Offset), " Count: ", integer_to_list(Count)]), true}}
   end.
 
-zeroOrGreater(Number) ->
+oneOrGreater(Number) ->
   if
     Number > 0 ->
       Number;
     true ->
-      0
+      1
   end.
 
 
